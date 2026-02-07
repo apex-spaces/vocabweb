@@ -11,7 +11,10 @@ import (
 
 type contextKey string
 
-const UserIDKey contextKey = "userID"
+const (
+	UserIDKey contextKey = "userID"
+	EmailKey  contextKey = "email"
+)
 
 type AuthMiddleware struct {
 	authClient *auth.Client
@@ -53,7 +56,15 @@ func (am *AuthMiddleware) Verify(next http.Handler) http.Handler {
 			return
 		}
 
+		// Extract email from token claims
+		email := ""
+		if emailClaim, ok := verifiedToken.Claims["email"].(string); ok {
+			email = emailClaim
+		}
+
+		// Set user_id and email to context
 		ctx := context.WithValue(r.Context(), UserIDKey, verifiedToken.UID)
+		ctx = context.WithValue(ctx, EmailKey, email)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
