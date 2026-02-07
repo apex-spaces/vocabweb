@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VocabWeb</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>VocabWeb</h1>
+      <p class="subtitle">英语单词收藏助手</p>
+    </header>
+
+    <!-- 未登录状态 -->
+    <div id="login-section" class="section hidden">
+      <div class="info-box">
+        <p>请配置 API Token 以开始使用</p>
+      </div>
+      
+      <div class="form-group">
+        <label for="api-url">API 地址</label>
+        <input type="text" id="api-url" placeholder="https://api.vocabweb.example.com">
+      </div>
+      
+      <div class="form-group">
+        <label for="api-token">API Token</label>
+        <input type="password" id="api-token" placeholder="输入你的 API Token">
+      </div>
+      
+      <button id="save-config-btn" class="btn btn-primary">保存配置</button>
+    </div>
+
+    <!-- 已登录状态 -->
+    <div id="dashboard-section" class="section hidden">
+      <div class="stats-box">
+        <div class="stat-item">
+          <span class="stat-label">今日收藏</span>
+          <span class="stat-value" id="today-count">-</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">总计</span>
+          <span class="stat-value" id="total-count">-</span>
+        </div>
+      </div>
+
+      <div class="recent-words">
+        <h3>最近收藏</h3>
+        <div id="recent-list" class="word-list">
+          <div class="loading">加载中...</div>
+        </div>
+      </div>
+
+      <button id="logout-btn" class="btn btn-secondary">退出登录</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+/* VocabWeb Extension - Content Script Styles */
+/* 使用高优先级选择器避免样式冲突 */
+
+.vocabweb-bubble {
+  all: initial;
+  position: absolute;
+  z-index: 2147483647;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #e0e0e0;
+  max-width: 320px;
+  min-width: 200px;
+  animation: vocabweb-fade-in 0.2s ease-out;
+}
+
+@keyframes vocabweb-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vocabweb-bubble-word {
+  all: initial;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4a9eff;
+  margin-bottom: 8px;
+  font-family: inherit;
+  display: block;
+}
+
+.vocabweb-bubble-loading {
+  all: initial;
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 10px;
+  font-family: inherit;
+  display: block;
+  line-height: 1.4;
+}
+
+.vocabweb-bubble-def {
+  all: initial;
+  color: #e0e0e0;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.vocabweb-bubble-btn {
+  all: initial;
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: #4a9eff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+  text-align: center;
+}
+
+.vocabweb-bubble-btn:hover {
+  background: #3a8eef;
+}
+
+.vocabweb-bubble-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.vocabweb-bubble-btn-success {
+  background: #4caf50 !important;
+}
+
+.vocabweb-bubble-btn-error {
+  background: #f44336 !important;
+}
+
+/* 成功提示消息 */
+.vocabweb-success-msg {
+  all: initial;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2147483647;
+  background: #4caf50;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateX(100px);
+  transition: all 0.3s ease-out;
+}
+
+.vocabweb-success-msg-show {
+  opacity: 1;
+  transform: translateX(0);
+}

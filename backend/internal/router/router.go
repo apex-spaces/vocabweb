@@ -12,6 +12,7 @@ type Router struct {
 	authHandler      *handler.AuthHandler
 	wordsHandler     *handler.WordsHandler
 	dashboardHandler *handler.DashboardHandler
+	ocrHandler       *handler.OCRHandler
 	authMiddleware   *middleware.AuthMiddleware
 }
 
@@ -20,6 +21,7 @@ func New(
 	authHandler *handler.AuthHandler,
 	wordsHandler *handler.WordsHandler,
 	dashboardHandler *handler.DashboardHandler,
+	ocrHandler *handler.OCRHandler,
 	authMiddleware *middleware.AuthMiddleware,
 ) *Router {
 	return &Router{
@@ -27,6 +29,7 @@ func New(
 		authHandler:      authHandler,
 		wordsHandler:     wordsHandler,
 		dashboardHandler: dashboardHandler,
+		ocrHandler:       ocrHandler,
 		authMiddleware:   authMiddleware,
 	}
 }
@@ -60,6 +63,9 @@ func (rt *Router) Setup() *chi.Mux {
 			// Words
 			r.Get("/words", rt.wordsHandler.List)
 			r.Get("/words/{id}", rt.wordsHandler.Get)
+
+			// OCR
+			r.Post("/ocr/analyze", rt.ocrHandler.AnalyzeImage)
 		})
 	})
 
