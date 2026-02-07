@@ -1,0 +1,68 @@
+# Cloud Build configuration for VocabWeb Backend
+# Builds Go backend Docker image and deploys to Cloud Run
+
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'asia-east2-docker.pkg.dev/openclaw-lytzju/vocabweb/backend:$COMMIT_SHA'
+      - '-t'
+      - 'asia-east2-docker.pkg.dev/openclaw-lytzju/vocabweb/backend:latest'
+      - '-f'
+      - 'backend/Dockerfile'
+      - './backend'
+    id: 'build-backend-image'
+
+  # Step 2: Push the Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'asia-east2-docker.pkg.dev/openclaw-lytzju/vocabweb/backend:$COMMIT_SHA'
+    id: 'push-backend-image'
+    waitFor: ['build-backend-image']
+
+  # Step 3: Push the latest tag
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'asia-east2-docker.pkg.dev/openclaw-lytzju/vocabweb/backend:latest'
+    id: 'push-backend-latest'
+    waitFor: ['build-backend-image']
+
+  # Step 4: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'vocabweb-api'
+      - '--image=asia-east2-docker.pkg.dev/openclaw-lytzju/vocabweb/backend:$COMMIT_SHA'
+      - '--region=asia-east2'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+      - '--memory=512Mi'
+      - '--cpu=1'
+      - '--min-instances=0'
+      - '--max-instances=10'
+      - '--timeout=300'
+      - '--set-env-vars=PORT=8080,GCP_PROJECT=openclaw-lytzju,ENVIRONMENT=production'
+      - '--set-secrets=DATABASE_URL=vocabweb-database-url:latest'
+      - '--add-cloudsql-instances=openclaw-lytzju:asia-east2:vocabweb-db'
+      - '--service-account=vocabweb-backend@openclaw-lytzju.iam.gserviceaccount.com'
+    id: 'deploy-backend'
+    waitFor: ['push-backend-image']
+
+# Images to be pushed to Artifact Registry
+images:
+  - 'asia-east2-docker.pkg.dev/openclaw-lytzju/vocabweb/backend:$COMMIT_SHA'
+  - 'asia-east2-docker.pkg.dev/openclaw-lytzju/vocabweb/backend:latest'
+
+# Build configuration
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+  
+timeout: '1200s'
