@@ -8,23 +8,26 @@ import (
 )
 
 type Router struct {
-	healthHandler *handler.HealthHandler
-	authHandler   *handler.AuthHandler
-	wordsHandler  *handler.WordsHandler
-	authMiddleware *middleware.AuthMiddleware
+	healthHandler    *handler.HealthHandler
+	authHandler      *handler.AuthHandler
+	wordsHandler     *handler.WordsHandler
+	dashboardHandler *handler.DashboardHandler
+	authMiddleware   *middleware.AuthMiddleware
 }
 
 func New(
 	healthHandler *handler.HealthHandler,
 	authHandler *handler.AuthHandler,
 	wordsHandler *handler.WordsHandler,
+	dashboardHandler *handler.DashboardHandler,
 	authMiddleware *middleware.AuthMiddleware,
 ) *Router {
 	return &Router{
-		healthHandler: healthHandler,
-		authHandler: authHandler,
-		wordsHandler: wordsHandler,
-		authMiddleware: authMiddleware,
+		healthHandler:    healthHandler,
+		authHandler:      authHandler,
+		wordsHandler:     wordsHandler,
+		dashboardHandler: dashboardHandler,
+		authMiddleware:   authMiddleware,
 	}
 }
 
@@ -50,6 +53,9 @@ func (rt *Router) Setup() *chi.Mux {
 
 			// Auth
 			r.Get("/auth/profile", rt.authHandler.GetProfile)
+
+			// Dashboard
+			r.Get("/dashboard", rt.dashboardHandler.GetDashboard)
 
 			// Words
 			r.Get("/words", rt.wordsHandler.List)

@@ -42,13 +42,20 @@ func main() {
 		log.Printf("Warning: Failed to initialize auth middleware: %v", err)
 	}
 
+	// Initialize repositories
+	var statsRepo *repository.StatsRepository
+	if db != nil {
+		statsRepo = repository.NewStatsRepository(db)
+	}
+
 	// Initialize handlers
 	healthHandler := handler.NewHealthHandler()
 	authHandler := handler.NewAuthHandler()
 	wordsHandler := handler.NewWordsHandler()
+	dashboardHandler := handler.NewDashboardHandler(statsRepo)
 
 	// Setup router
-	rt := router.New(healthHandler, authHandler, wordsHandler, authMiddleware)
+	rt := router.New(healthHandler, authHandler, wordsHandler, dashboardHandler, authMiddleware)
 	r := rt.Setup()
 
 	// Apply CORS middleware
